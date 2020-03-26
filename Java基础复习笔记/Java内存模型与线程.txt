@@ -1,0 +1,7 @@
+Java内存模型与线程
+
+关于volatile关键字
+https://juejin.im/post/5d9c8ab4518825094e372706#comment
+
+https://juejin.im/post/59cf5bedf265da06710dd337#comment
+

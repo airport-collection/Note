@@ -1,0 +1,17 @@
+MySQL5支持对视图的支持。
+
+什么是视图：
+	视图是虚拟的表，只包含使用时动态的检索数据的查询。视图本身不包含数据，数据是从表中检索出来的。
+	
+视图的作用：
+	重用SQL语句
+	简化复杂的SQL操作
+	使用表的组成部分而不是整个表
+	保护数据
+	更改数据的格式和表示
+	
+	
+CREATE VIEW atb  AS 
+	SELECT a.*, t.title AS tag_title, t.create_date, t.click_times
+	FROM blog AS b, article AS a, tag AS t 
+	WHERE a.id = b.art_id AND t.id = b.tag_id;
