@@ -1,0 +1,58 @@
+# nginx配置
+docker pull nginx # 最新版
+
+# 运行容器，并映射端口 --name表示容器名称 -p表示端口映射 -d表示后台运行
+docker run --name nginx -p 80:80 -p 443:443 -d nginx
+
+# 进入容器，修改配置文件 -i表示以交互模式运行容器 -t表示为容器分配一个伪输入终端
+docker exec -it [容器ID]  /bin/bash
+# 例如
+docker exec -it e6073fe3e83d  /bin/bash
+
+# 需要安装vim
+apt-get update
+apt-get install vim
+
+# 然后就可以修改配置文件了
+# 然后需要从容器外部复制文件到内部
+docker cp [外部文件路径] [容器ID]: [内部目标路径]
+# 例如
+docker cp /home/harrison/nginx/nginx_cert.zip e6073fe3e83d:/etc/nginx/cert
+
+# 配置文件内容 blog.conf: 
+
+# 同样地，复制文件
+docker cp /home/harrison/nginx/blog.conf  e6073fe3e83d:/etc/nginx/conf.d/
+
+# 重启nginx报错，查看日志
+sudo docker logs -f -t --tail 行数 容器名
+# 例如
+sudo docker logs -f -t --tail 20 e6073fe3e83d
+
+# 添加数据卷映射
+# 进入容器，新建一个DockerFile
+#如下内容
+
+FROM nginx
+VOLUME ["/etc/nginx", "/usr/share/nginx"]
+CMD /bin/bash
+
+# 然后重新构建
+docker build -f /home/DockerFile -t hl/nginx .
+# 这里报错
+# 干脆删掉重建
+
+docker run -d --name nginx \
+	-v /home/harrison/nginx/config/conf.d:/etc/nginx/conf.d \
+	-v /home/harrison/nginx/config/cert:/etc/nginx/cert \
+	-v /home/harrison/nginx/html:/usr/share/nginx/html \
+	-p 80:80 \
+	-p 443:443 \
+	nginx
+
+docker run -d --name nginx \
+	--mount source=/home/harrison/nginx/config,target=/etc/nginx \
+	--mount source=/home/harrison/nginx/html,target=/usr/share/nginx/html \
+	-p 80:80 \
+	-p 443:443 \
+	nginx

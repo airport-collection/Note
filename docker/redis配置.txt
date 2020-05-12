@@ -1,0 +1,7 @@
+docker run -d \
+-p 26379:6379 \
+-v /home/harrison/redis/config/redis.conf:/etc/redis/redis.conf \
+--privileged=true \
+--name redis \
+redis \
+redis-server /etc/redis/redis.conf
