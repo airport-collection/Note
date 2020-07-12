@@ -322,3 +322,61 @@ while(iterator.hasNext()) {
 因为在执行第二句的时候，==list==的==modCount==改变了，但是迭代器声明是在第一句，也就是在改变之前就已经创建迭代器对象了，对象内部的==expectedModCount==还等于0，所以就造成不一致了。
 
 不能分析完所有的例子，但是原理都是一样的，通过上面几个例子理解原理就行。
+
+
+
+# 扩容机制（20200610再次分析）
+
+这是扩容步骤的第一个关键方法：
+
+```java
+private Object[] grow(int minCapacity) {
+    return elementData = Arrays.copyOf(elementData,
+                                       newCapacity(minCapacity));
+}
+```
+
+这里的**minCapacity**有没有可能小于0，也即是说溢出了？当然可能，不管是**add**方法还是**addAll**方法，都没有判断是否溢出了(但是不可能等于0)。继续看**newCapacity**方法：
+
+```java
+private int newCapacity(int minCapacity) {
+    // overflow-conscious code
+    int oldCapacity = elementData.length;
+    int newCapacity = oldCapacity + (oldCapacity >> 1);
+    if (newCapacity - minCapacity <= 0) {
+        if (elementData == DEFAULTCAPACITY_EMPTY_ELEMENTDATA)
+            return Math.max(DEFAULT_CAPACITY, minCapacity);
+        if (minCapacity < 0) // overflow
+            throw new OutOfMemoryError();
+        return minCapacity;
+    }
+    return (newCapacity - MAX_ARRAY_SIZE <= 0)
+        ? newCapacity
+        : hugeCapacity(minCapacity);
+}
+```
+
+可见，这里判断了溢出的情况，但是哪些情况下会造成溢出呢？这里的**minCapacity**和**newCapacity**都是有可能小于0的。
+
+整个方法根据条件**newCapacity - minCapacity <= 0**分为了两个分支：
+
+第一个分支，要满足这个条件，可能有以下几种情况：
+
+
+
+首先看第一个分支，要满足这个条件，有以下几种情况（对应了内部的几种分支）：
+
+1. newCapacity <= minCapacity < 0
+2. newCapacity < 0 < minCapacity
+3. 0 < newCapacity  <= minCapacity
+
+从第一个子分支可以看出，如果该列表对象是通过无参构造方法创建的，那么在第一次执行**add**操作时，会扩容到**DEFAULT_CAPACITY**大小，即10。如果执行的是**addAll**，那么则根据传入的集合大小与10进行比较，取较大者。这个子分支毫无疑问会满足第3种情况。
+
+第二个子分支判断了**minCapacity**是否小于0，对应了第1种情况，那么直接抛出异常。
+
+第三个子分支属于第2种或第3种情况，即1.5倍的扩容策略不行了，那么就进行按需扩容。
+
+
+
+第二个分支，首先满足newCapacity > minCapacity，其次，再加上一个条件newCapacity <= MAX_ARRAY_SIZE
+
