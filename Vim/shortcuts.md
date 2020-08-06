@@ -61,7 +61,7 @@ Search in current line:
 f{Char}:
 	search the target character.
 
-F{Char}:
+k{Char}:
 	like the 'f{Char}', but it searches target reversely.
 
 t{Char}:
