@@ -8,6 +8,7 @@ set autoindent
 set hlsearch
 set t_Co=256
 set foldmethod=syntax
+set foldlevelstart=99
 
 "set t_AB=^[[48;5;%dm
 "set t_AF=^[[38;5;%dm
@@ -21,12 +22,13 @@ inoremap <leader>w <Esc>:w<cr>
 nnoremap <leader>w :w<cr>
 inoremap jj <Esc>
 
-" insert模式下光标的移动
+" 插入模式下的光标移动
 inoremap <C-h> <Left>
 inoremap <C-j> <Down>
 inoremap <C-k> <Up>
 inoremap <C-l> <Right>
 
+" plugins-begin
 " vim plugins configuration
 
 " Specify a directory for plugins
@@ -62,11 +64,12 @@ Plug 'simeji/winresizer'
 
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
+Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 
 " Initialize plugin system
 call plug#end()
 
-
+" plugins-end
 
 " plug key map
 " nerdtree
@@ -83,9 +86,12 @@ set enc=utf8
 set fencs=utf8,gbk,gb2312,gb18030
 set guifont=MesloLGL\ Nerd\ Font\ 12
 
-"================
-"=====coc.vim====
-"================
+
+" ===============Plugins Configuration==========================
+
+
+" ------------------- coc.vim configuration --------------------
+
 " TextEdit might fail if hidden is not set.
 set hidden
 
@@ -239,3 +245,25 @@ nnoremap <silent><nowait> <space>j  :<C-u>CocNext<CR>
 nnoremap <silent><nowait> <space>k  :<C-u>CocPrev<CR>
 " Resume latest coc list.
 nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
+" -------------------- coc.nvim configuration finished --------------------
+
+" ------------------- vim-go configuration --------------------
+" use golang language server
+let g:go_def_mode='gopls'
+let g:go_info_mode='gopls'
+" Highlight more info
+let g:go_highlight_build_constraints = 1
+let g:go_highlight_extra_types = 1
+let g:go_highlight_fields = 1
+let g:go_highlight_functions = 1
+let g:go_highlight_methods = 1
+let g:go_highlight_operators = 1
+let g:go_highlight_structs = 1
+let g:go_highlight_types = 1
+" highlight same variable in view
+let g:go_auto_sameids = 1
+" show type info in statusbar
+let g:go_auto_type_info = 1
+" disable gd mapping of vim-go
+let g:go_def_mapping_enabled = 0
+" -------------------- vim-go configuration finished --------------------
