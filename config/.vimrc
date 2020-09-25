@@ -4,6 +4,7 @@ set expandtab
 set shiftwidth=4
 set nu
 syntax on
+colorscheme hybrid
 set autoindent
 set hlsearch
 set t_Co=256
@@ -13,20 +14,36 @@ set foldlevelstart=99
 "set t_AB=^[[48;5;%dm
 "set t_AF=^[[38;5;%dm
 
-highlight Pmenu    ctermbg=blue guifg=blue
-highlight PmenuSel ctermbg=green guifg=blue
+" highlight Pmenu    ctermbg=blue guifg=blue
+" highlight PmenuSel ctermbg=green guifg=blue
 
 let mapleader=","
 
 inoremap <leader>w <Esc>:w<cr>
 nnoremap <leader>w :w<cr>
 inoremap jj <Esc>
-
+nnoremap noh <Esc> :noh<cr>
 " 插入模式下的光标移动
 inoremap <C-h> <Left>
 inoremap <C-j> <Down>
 inoremap <C-k> <Up>
 inoremap <C-l> <Right>
+
+" 窗口控制
+nnoremap  [Window]   <Nop>
+nmap      s [Window]
+" 使用 sv, sg 快速在 normal 模式下分割窗口
+nnoremap <silent> [Window]v  :<C-u>split<CR>
+nnoremap <silent> [Window]g  :<C-u>vsplit<CR>
+" 使用 leader+e 快速退出窗口(但是不会关闭 buffer)
+noremap <leader>e :q<cr>
+" 使用 leader+b 快速关闭当前 buffer
+noremap <leader>b :bd<cr>
+" use ctrl+h/j/k/l switch window
+noremap <C-h> <C-w>h
+noremap <C-j> <C-w>j
+noremap <C-k> <C-w>k
+noremap <C-l> <C-w>l
 
 " plugins-begin
 " vim plugins configuration
@@ -57,15 +74,14 @@ Plug 'majutsushi/tagbar'
 Plug 'lfv89/vim-interestingwords'
 Plug 'sbdchd/neoformat'
 Plug 'tpope/vim-commentary'
-
 Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app & cnpm install'  }
-
 Plug 'simeji/winresizer'
-
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
-
 Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
-
+Plug 'tpope/vim-surround'
+Plug 'flazz/vim-colorschemes'
+Plug 'pangloss/vim-javascript'
+Plug 'vim-syntastic/syntastic'
 " Initialize plugin system
 call plug#end()
 
@@ -89,6 +105,12 @@ set guifont=MesloLGL\ Nerd\ Font\ 12
 
 " ===============Plugins Configuration==========================
 
+"-------------------- airline-themes -------------------------
+let g:airline_theme="bubblegum"
+
+"-------------------- indentline ----------------------------
+let g:vim_json_syntax_conceal = 0
+let g:indentLine_concealcursor='nc'
 
 " ------------------- coc.vim configuration --------------------
 
@@ -104,7 +126,7 @@ set cmdheight=2
 
 " Having longer updatetime (default is 4000 ms = 4 s) leads to noticeable
 " delays and poor user experience.
-set updatetime=300
+set updatetime=100
 
 " Don't pass messages to |ins-completion-menu|.
 set shortmess+=c
@@ -252,18 +274,62 @@ nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
 let g:go_def_mode='gopls'
 let g:go_info_mode='gopls'
 " Highlight more info
-let g:go_highlight_build_constraints = 1
+let g:go_highlight_array_whitespace_error = 1
+let g:go_highlight_chan_whitespace_error = 1
 let g:go_highlight_extra_types = 1
-let g:go_highlight_fields = 1
-let g:go_highlight_functions = 1
-let g:go_highlight_methods = 1
+let g:go_highlight_space_tab_error = 1
+let g:go_highlight_trailing_whitespace_error = 1
 let g:go_highlight_operators = 1
-let g:go_highlight_structs = 1
+let g:go_highlight_functions = 1
+let g:go_highlight_function_parameters = 1
+let g:go_highlight_function_calls = 1
 let g:go_highlight_types = 1
-" highlight same variable in view
-let g:go_auto_sameids = 1
+let g:go_highlight_fields = 1
+let g:go_highlight_build_constraints = 1
+let g:go_highlight_generate_tags = 1
+let g:go_highlight_string_spellcheck = 1
+let g:go_highlight_format_strings = 1
+let g:go_highlight_variable_declarations = 1
+let g:go_highlight_variable_assignments = 1
+let g:go_highlight_diagnostic_errors = 1
+let g:go_highlight_diagnostic_warnings = 1
+let g:go_import_autosave=1
+
 " show type info in statusbar
 let g:go_auto_type_info = 1
 " disable gd mapping of vim-go
 let g:go_def_mapping_enabled = 0
 " -------------------- vim-go configuration finished --------------------
+
+" ------------------- fzf.vim configuration --------------------
+nnoremap <silent> <leader>ag :Ag <C-R><C-W><CR>
+nnoremap <silent> <c-p> :Files <CR>
+
+" -------------------- fzf.vim configuration finished --------------------
+
+" ------------------- vim-javascript configuration --------------------
+let g:javascript_plugin_jsdoc = 1
+let g:javascript_plugin_ngdoc = 1
+let g:javascript_plugin_flow = 1
+augroup javascript_folding
+    au!
+    au FileType javascript setlocal foldmethod=syntax
+augroup END
+let g:javascript_conceal_function             = "ƒ"
+let g:javascript_conceal_null                 = "ø"
+let g:javascript_conceal_this                 = "@"
+let g:javascript_conceal_return               = "⇚"
+let g:javascript_conceal_undefined            = "¿"
+let g:javascript_conceal_NaN                  = "ℕ"
+let g:javascript_conceal_prototype            = "¶"
+let g:javascript_conceal_static               = "•"
+let g:javascript_conceal_super                = "Ω"
+let g:javascript_conceal_arrow_function       = "⇒"
+let g:javascript_conceal_noarg_arrow_function = "🞅"
+let g:javascript_conceal_underscore_arrow_function = "🞅"
+set conceallevel=1
+" ------------------- vim-javascript configuration end --------------------
+
+" ------------------- syntastic configuration --------------------
+let g:syntastic_javascript_checkers=['eslint']
+" ------------------- syntastic configuration end --------------------
