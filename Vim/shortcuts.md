@@ -81,6 +81,8 @@ dt{Char}:
 
 Edit After Deletion in Vim:
 
+    Real peace, is not the absence of conflict; it's the absence of justice.     
+
 r: replace the current character.
 R: replace characters until enter ESC.
 s: delete the current character and enter in insert mode.

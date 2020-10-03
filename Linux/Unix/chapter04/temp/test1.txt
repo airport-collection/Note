@@ -1,0 +1,12 @@
+❯ make copy   
+gcc -Wall copy.c -o ../out/copy
+/usr/bin/ld: /tmp/ccaczirp.o: in function `main':
+copy.c:(.text+0x6b): undefined reference to `usageErr'
+/usr/bin/ld: copy.c:(.text+0xbc): undefined reference to `errExit'
+/usr/bin/ld: copy.c:(.text+0x12a): undefined reference to `errExit'
+/usr/bin/ld: copy.c:(.text+0x162): undefined reference to `fatal'
+/usr/bin/ld: copy.c:(.text+0x1aa): undefined reference to `errExit'
+/usr/bin/ld: copy.c:(.text+0x1cd): undefined reference to `errExit'
+/usr/bin/ld: copy.c:(.text+0x1f0): undefined reference to `errExit'
+collect2: error: ld returned 1 exit status
+make: *** [Makefile:5: copy] Error 1
