@@ -1,0 +1,22 @@
+"+p# git
+git config --global http.proxy 'http://127.0.0.1:7890'
+git config --global https.proxy 'http://127.0.0.1:7890'
+
+git config --global http.proxy 'socks5://127.0.0.1:7891'
+git config --global https.proxy 'socks5://127.0.0.1:7891'
+
+git config --global --unset http.proxy
+git config --global --unset https.proxy
+
+# nodejs
+npm config set proxy http://127.0.0.1:7890
+npm config set https-proxy http://127.0.0.1:7890
+
+npm config delete proxy
+npm config delete https-proxy
+
+
+#polipo全局代理
+export http_proxy=http://127.0.0.1:8123 
+export https_proxy=http://127.0.0.1:8123
+
